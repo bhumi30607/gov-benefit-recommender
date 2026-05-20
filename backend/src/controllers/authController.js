@@ -15,7 +15,7 @@ const buildProfilePictureUrl = (req, file) => {
   return `${req.protocol}://${req.get("host")}/uploads/profile-pictures/${file.filename}`;
 };
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const getGoogleClient = () => new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const sanitizeUser = (user) => ({
   _id: user._id,
@@ -129,7 +129,7 @@ export const googleAuth = async (req, res) => {
     return res.status(400).json({ message: "Google credential is required" });
   }
 
-  const ticket = await googleClient.verifyIdToken({
+  const ticket = await getGoogleClient().verifyIdToken({
     idToken: credential,
     audience: process.env.GOOGLE_CLIENT_ID
   });
