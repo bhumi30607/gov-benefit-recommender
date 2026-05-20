@@ -7,8 +7,14 @@ const getMongoUri = () => {
     return process.env.MONGODB_URI;
   }
 
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("MONGODB_URI is required in production");
+  const isHostedEnvironment =
+    process.env.NODE_ENV === "production" ||
+    process.env.RENDER === "true" ||
+    Boolean(process.env.RENDER_SERVICE_ID) ||
+    Boolean(process.env.RENDER_EXTERNAL_URL);
+
+  if (isHostedEnvironment) {
+    throw new Error("MONGODB_URI is required in hosted environments like Render");
   }
 
   return "mongodb://127.0.0.1:27017/gov-benefit-recommender";
